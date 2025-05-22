@@ -47,5 +47,8 @@ TagManager:
   - name: Ground
     uniqueID: 4105529763
     locked: 0
+  - name: Trees
+    uniqueID: 2762268119
+    locked: 0
   m_RenderingLayers:
   - Default
