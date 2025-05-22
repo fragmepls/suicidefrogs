@@ -201,8 +201,9 @@ PublishScripts/
 # NuGet Packages
 *.nupkg
 *.snupkg
-# **/[Pp]ackages/*
-# !**/[Pp]ackages/build/
+**/[Pp]ackages/*
+!**/[Pp]ackages/manifest.json
+!**/[Pp]ackages/packages-lock.json
 # NuGet v3's project.json files produces more ignorable files
 *.nuget.props
 *.nuget.targets
