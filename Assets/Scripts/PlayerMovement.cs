@@ -30,10 +30,18 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetFloat(_horizontal, _movement.x);
         _animator.SetFloat(_vertical, _movement.y);
 
-        if (_movement != Vector2.zero)
-        {
-            _animator.SetFloat(_lastHorizontal, _movement.x);
-            _animator.SetFloat(_lastVertical, _movement.y);
-        }
+        if (_movement == Vector2.zero) return;
+        _animator.SetFloat(_lastHorizontal, _movement.x);
+        _animator.SetFloat(_lastVertical, _movement.y);
+        
+        PreventPlayerGoingOffScreen();
+    }
+    
+    private void PreventPlayerGoingOffScreen()
+    {
+        Vector2 screenPos = Camera.main.WorldToViewportPoint(transform.position);
+        screenPos.x = Mathf.Clamp(screenPos.x, 0.05f, 0.95f);
+        screenPos.y = Mathf.Clamp(screenPos.y, 0.05f, 0.95f);
+        transform.position = Camera.main.ViewportToWorldPoint(screenPos);
     }
 }
