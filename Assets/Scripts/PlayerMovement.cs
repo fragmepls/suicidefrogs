@@ -1,37 +1,39 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 // ReSharper disable All
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 5f;
+    [FormerlySerializedAs("_moveSpeed")] [SerializeField] private float moveSpeed = 5f;
+    
+    private Rigidbody2D rb;
+    private Vector2 moveInput;
+    private Animator animator;
 
-    private Vector2 _movement;
-    private Rigidbody2D _rb;
-    private Animator _animator;
-
-    private const string _horizontal = "Horizontal";
-    private const string _vertical = "Vertical";
-    private const string _lastHorizontal = "LastHorizontal";
-    private const string _lastVertical = "LastVertical";
-
-    private void Awake()
+    private void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        _movement.Set(InputManager.Movement.x, InputManager.Movement.y);
-
-        _rb.linearVelocity = _movement.normalized * _moveSpeed;
-
-        _animator.SetFloat(_horizontal, _movement.x);
-        _animator.SetFloat(_vertical, _movement.y);
-
-        if (_movement == Vector2.zero) return;
-        _animator.SetFloat(_lastHorizontal, _movement.x);
-        _animator.SetFloat(_lastVertical, _movement.y);
+        rb.linearVelocity = moveInput * moveSpeed;
+    }
+    
+    public void move(InputAction.CallbackContext context)
+    {
+        animator.SetBool("isWalking", true);
+        if (context.canceled)
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetFloat("LastInputX", moveInput.x);
+            animator.SetFloat("LastInputY", moveInput.y);
+        }
+        moveInput = context.ReadValue<Vector2>();
+        animator.SetFloat("InputX", moveInput.x);
+        animator.SetFloat("InputY", moveInput.y);
     }
 }
